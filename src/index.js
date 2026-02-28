@@ -2,7 +2,7 @@ const extract = async ({
   apiKey,
   fields,
   file,
-  apiUrl = "https://autofill-backend-production.up.railway.app",
+  apiUrl = "https://autofill-backend-production.up.railway.app/api/extract",
 }) => {
   const formData = new FormData();
 
@@ -33,3 +33,4 @@ const extract = async ({
 export default {
   extract,
 };
+
