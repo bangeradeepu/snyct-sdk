@@ -1,14 +1,24 @@
 const extract = async ({
   apiKey,
   fields,
-  file,
+  file, // single file
+  files, // multiple files
   instructions = "",
   apiUrl = "https://autofill-backend-production.up.railway.app/api/extract",
 }) => {
-
   const formData = new FormData();
 
-  formData.append("file", file);
+  // ✅ Single File Support
+  if (file) {
+    formData.append("file", file);
+  }
+
+  // ✅ Multiple File Support
+  if (files && Array.isArray(files)) {
+    files.forEach((f) => {
+      formData.append("file", f);
+    });
+  }
 
   formData.append("fields", JSON.stringify(fields));
 
@@ -16,9 +26,11 @@ const extract = async ({
 
   const res = await fetch(apiUrl, {
     method: "POST",
+
     headers: {
       "x-api-key": apiKey,
     },
+
     body: formData,
   });
 
