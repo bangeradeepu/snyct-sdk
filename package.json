@@ -1,6 +1,6 @@
 {
  "name": "digimithra-autofill-ai-sdk",
- "version": "1.0.6",
+ "version": "1.0.7",
  "description": "AI document autofill SDK",
  "main": "src/index.js",
  "author": "Deepesh",
