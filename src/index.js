@@ -2,12 +2,17 @@ const extract = async ({
   apiKey,
   fields,
   file,
+  instructions = "",
   apiUrl = "https://autofill-backend-production.up.railway.app/api/extract",
 }) => {
+
   const formData = new FormData();
 
   formData.append("file", file);
+
   formData.append("fields", JSON.stringify(fields));
+
+  formData.append("instructions", instructions);
 
   const res = await fetch(apiUrl, {
     method: "POST",
@@ -33,4 +38,3 @@ const extract = async ({
 export default {
   extract,
 };
-
