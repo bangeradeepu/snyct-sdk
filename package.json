@@ -1,8 +1,8 @@
 {
- "name": "digimithra-autofill-ai-sdk",
+ "name": "snyct",
  "version": "1.0.7",
- "description": "AI document autofill SDK",
+ "description": "AI document Extractor",
  "main": "src/index.js",
- "author": "Deepesh",
+ "author": "Deepesh M Bangera",
  "license": "MIT"
 }
