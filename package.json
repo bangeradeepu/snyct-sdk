@@ -1,6 +1,6 @@
 {
  "name": "snyct-ai",
- "version": "1.0.3",
+ "version": "1.0.4",
  "description": "AI document extractor",
  "main": "src/index.js",
  "author": "Deepesh M Bangera",
