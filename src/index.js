@@ -1,19 +1,29 @@
+import axios from "axios";
+
+let FormDataClass;
+
+if (typeof window === "undefined") {
+  // Node environment
+  FormDataClass = require("form-data");
+} else {
+  // Browser environment
+  FormDataClass = FormData;
+}
+
 const extract = async ({
   apiKey,
   fields,
-  file, // single file
-  files, // multiple files
+  file,
+  files,
   instructions = "",
   apiUrl = "https://autofill-backend-production.up.railway.app/api/extract",
 }) => {
-  const formData = new FormData();
+  const formData = new FormDataClass();
 
-  // ✅ Single File Support
   if (file) {
     formData.append("file", file);
   }
 
-  // ✅ Multiple File Support
   if (files && Array.isArray(files)) {
     files.forEach((f) => {
       formData.append("file", f);
@@ -21,32 +31,16 @@ const extract = async ({
   }
 
   formData.append("fields", JSON.stringify(fields));
-
   formData.append("instructions", instructions);
 
-  const res = await fetch(apiUrl, {
-    method: "POST",
-
+  const response = await axios.post(apiUrl, formData, {
     headers: {
       "x-api-key": apiKey,
+      ...(formData.getHeaders ? formData.getHeaders() : {}),
     },
-
-    body: formData,
   });
 
-  const data = await res.json();
-
-  if (!res.ok) {
-    throw {
-      error: data.error || "Request failed",
-      errorCode: data.errorCode || "UNKNOWN_ERROR",
-      status: res.status,
-    };
-  }
-
-  return data;
+  return response.data;
 };
 
-export default {
-  extract,
-};
+export default { extract };
