@@ -11,48 +11,71 @@ const extract = async ({
   instructions = "",
   apiUrl = "https://autofill-backend-production.up.railway.app/api/extract",
 }) => {
+
+  if (!apiKey) {
+    throw {
+      status: 401,
+      success: false,
+      error: "API key is missing",
+      errorCode: "API_KEY_REQUIRED",
+    };
+  }
+
   const formData = isBrowser ? new FormData() : new FormDataNode();
 
   const appendFile = (f) => {
     if (isBrowser) {
-      // Browser File object
       formData.append("file", f);
     } else {
-      // Node (multer file object OR buffer)
       if (f.buffer) {
         formData.append("file", f.buffer, {
           filename: f.originalname || "file",
           contentType: f.mimetype || "application/octet-stream",
         });
       } else {
-        // raw buffer fallback
-        formData.append("file", f, {
-          filename: "file",
-        });
+        formData.append("file", f, { filename: "file" });
       }
     }
   };
 
-  if (file) {
-    appendFile(file);
-  }
+  if (file) appendFile(file);
+  if (files && Array.isArray(files)) files.forEach(appendFile);
 
-  if (files && Array.isArray(files)) {
-    files.forEach((f) => appendFile(f));
-  }
-
-  formData.append("fields", JSON.stringify(fields));
+  formData.append("fields", JSON.stringify(fields || {}));
   formData.append("instructions", instructions);
 
-  const response = await axios.post(apiUrl, formData, {
-    headers: {
-      "x-api-key": apiKey,
-      ...(formData.getHeaders ? formData.getHeaders() : {}),
-    },
-    maxBodyLength: Infinity,
-  });
+  try {
+    const response = await axios.post(apiUrl, formData, {
+      headers: {
+        "x-api-key": apiKey,
+        ...(formData.getHeaders ? formData.getHeaders() : {}),
+      },
+      maxBodyLength: Infinity,
+      timeout: 30000,
+    });
 
-  return response.data;
+    return response.data;
+
+  } catch (error) {
+
+    if (error.response) {
+      const { status, data } = error.response;
+
+      throw {
+        status,
+        success: false,
+        error: data?.error || "Request failed",
+        errorCode: data?.errorCode || "UNKNOWN_ERROR",
+      };
+    }
+
+    throw {
+      status: 500,
+      success: false,
+      error: "Network error",
+      errorCode: "NETWORK_ERROR",
+    };
+  }
 };
 
 export default { extract };
