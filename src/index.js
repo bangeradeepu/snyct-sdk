@@ -1,14 +1,7 @@
 import axios from "axios";
+import FormDataNode from "form-data";
 
-let FormDataClass;
-
-if (typeof window === "undefined") {
-  // Node environment
-  FormDataClass = require("form-data");
-} else {
-  // Browser environment
-  FormDataClass = FormData;
-}
+const isBrowser = typeof window !== "undefined";
 
 const extract = async ({
   apiKey,
@@ -18,7 +11,7 @@ const extract = async ({
   instructions = "",
   apiUrl = "https://autofill-backend-production.up.railway.app/api/extract",
 }) => {
-  const formData = new FormDataClass();
+  const formData = isBrowser ? new FormData() : new FormDataNode();
 
   if (file) {
     formData.append("file", file);
