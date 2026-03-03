@@ -13,14 +13,32 @@ const extract = async ({
 }) => {
   const formData = isBrowser ? new FormData() : new FormDataNode();
 
+  const appendFile = (f) => {
+    if (isBrowser) {
+      // Browser File object
+      formData.append("file", f);
+    } else {
+      // Node (multer file object OR buffer)
+      if (f.buffer) {
+        formData.append("file", f.buffer, {
+          filename: f.originalname || "file",
+          contentType: f.mimetype || "application/octet-stream",
+        });
+      } else {
+        // raw buffer fallback
+        formData.append("file", f, {
+          filename: "file",
+        });
+      }
+    }
+  };
+
   if (file) {
-    formData.append("file", file);
+    appendFile(file);
   }
 
   if (files && Array.isArray(files)) {
-    files.forEach((f) => {
-      formData.append("file", f);
-    });
+    files.forEach((f) => appendFile(f));
   }
 
   formData.append("fields", JSON.stringify(fields));
@@ -31,6 +49,7 @@ const extract = async ({
       "x-api-key": apiKey,
       ...(formData.getHeaders ? formData.getHeaders() : {}),
     },
+    maxBodyLength: Infinity,
   });
 
   return response.data;
