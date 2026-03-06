@@ -40,9 +40,7 @@ Define fields → Upload document → Get structured JSON output
 
     npm install snyct-ai
 
-## Install via yarn
 
-    yarn add snyct-ai
 
 ------------------------------------------------------------------------
 
@@ -98,7 +96,7 @@ const data = await Snyct.extract({
 
 # API Endpoint
 
-    POST https://autofill-backend-production.up.railway.app/api/extract
+    POST https://api.snyct.com/api/extract
 
 ------------------------------------------------------------------------
 
