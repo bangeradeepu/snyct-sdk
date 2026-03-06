@@ -207,8 +207,9 @@ app.listen(3000);
 
 ------------------------------------------------------------------------
 
-# Support
+# repositories
 
-For support or enterprise demo:
 
-Email: support@snyct.com
+Documentation: https://github.com/bangeradeepu/snyct-documentation
+Dashboard: https://github.com/bangeradeepu/snyct-docs
+SDK: https://github.com/bangeradeepu/snyct-sdk

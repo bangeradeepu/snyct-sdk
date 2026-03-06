@@ -9,7 +9,7 @@ const extract = async ({
   file,
   files,
   instructions = "",
-  apiUrl = "https://autofill-backend-production.up.railway.app/api/extract",
+  apiUrl = "https://api.snyct.com/api/extract",
 }) => {
 
   if (!apiKey) {
